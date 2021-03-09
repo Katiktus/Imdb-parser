@@ -3,12 +3,15 @@ package ua.edu.sumdu.j2ee.pohorila.parse.model.converters;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 import ua.edu.sumdu.j2ee.pohorila.parse.model.entities.Film;
 import org.json.*;
 
+@Component
 public class StringToFilmConverter implements Converter<String, Film>{
     private static final Logger logger = LogManager.getLogger();
 
+    @Override
     public Film convert(String source) {
             Film film = new Film();
             try {

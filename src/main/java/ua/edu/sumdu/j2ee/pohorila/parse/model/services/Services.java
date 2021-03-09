@@ -3,17 +3,43 @@ package ua.edu.sumdu.j2ee.pohorila.parse.model.services;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.stereotype.Service;
 import ua.edu.sumdu.j2ee.pohorila.parse.model.entities.Film;
 import java.io.*;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-@Component
-public class Services implements  ServicesInterface{
+import static ua.edu.sumdu.j2ee.pohorila.parse.model.SendGetRequest.sendGetRequest;
 
+
+@Service
+public class Services implements  ServicesInterface{
+    @Autowired
+    private ConversionService conversionService;
 
     public Services() {
+    }
+
+    public Film getFilmById(String imdb, @Value("${sbpg.init.APIKEY}") String key, @Value("${sbpg.init.SEARCH_BY_IMDB_URL}") String myURL){
+        String requestUrl = myURL.replaceAll("IMDB", imdb).replaceAll("APIKEY", key);
+        String request = sendGetRequest(requestUrl);
+        Film result = conversionService.convert(request, Film.class);
+        return result;
+    }
+
+    public List<Film> getFilmByTitle(String title, @Value("${sbpg.init.APIKEY}") String key, @Value("${sbpg.init.SEARCH_URL}") String myURL) throws UnsupportedEncodingException {
+        List<Film> films = new ArrayList<>();
+        title = URLEncoder.encode(title, "UTF-8");
+        String requestUrl = myURL.replaceAll("TITLE", title).replaceAll("APIKEY", key);
+        String request = sendGetRequest(requestUrl);
+        films = conversionService.convert(request, films.getClass());
+        return films;
     }
 
 
@@ -53,7 +79,7 @@ public class Services implements  ServicesInterface{
 
     //File targetFile
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static void writeData(Film data) throws IOException{
+    public void writeData(Film data) throws IOException{
         String output = "result.docx";
         File file = new File("src//main//resources//templates//results.docx");
         FileInputStream fis = new FileInputStream(file.getAbsolutePath());
