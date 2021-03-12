@@ -1,9 +1,6 @@
 package ua.edu.sumdu.j2ee.pohorila.parse.config;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
@@ -25,14 +22,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new StringToFilmConverter());
         registry.addConverter(new StringToFilmListConverter());
-    }
-
-    @Bean
-    public ConversionService conversionService () {
-        DefaultConversionService service = new DefaultConversionService();
-        service.addConverter(new StringToFilmConverter());
-        service.addConverter(new StringToFilmListConverter());
-        return service;
     }
 
 }

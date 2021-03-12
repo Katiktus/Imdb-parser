@@ -8,24 +8,54 @@ import ua.edu.sumdu.j2ee.pohorila.parse.model.entities.Film;
 import ua.edu.sumdu.j2ee.pohorila.parse.model.services.Services;
 import ua.edu.sumdu.j2ee.pohorila.parse.model.services.ServicesInterface;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
 @RestController
 public class Controller {
-    private ServicesInterface filmsService;
+    private final ServicesInterface filmsService;
 
     public Controller(Services filmsService) {
         this.filmsService = filmsService;
     }
 
+    @RequestMapping(value = "/film", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getFilmId(@RequestParam(value = "id", defaultValue = "tt0372784") String id,
+                                     @RequestParam(value = "apikey", defaultValue = "6b935860") String apikey,
+                                     @Value("${sbpg.init.SEARCH_BY_IMDB_URL}") String myurl){
+        System.out.println("Get film by is here: " + id);
+        Film filmById = filmsService.getFilmById(id, apikey, myurl);
+        return ResponseEntity.ok(filmById);
+    }
+
     @RequestMapping(value = "/films", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> testMethod(@RequestParam(value = "id", defaultValue = "tt0372784") String id,
-                                        @RequestParam(value = "apikey", defaultValue = "6b935860") String apikey,
-                                        @Value("${sbpg.init.SEARCH_BY_IMDB_URL}") String myurl){
-        System.out.println("Test method is here: " + id);
-        ServicesInterface services = new Services();
-        Film filmById = services.getFilmById(id, apikey, myurl);
+    public ResponseEntity<?> getFilmTitle(@RequestParam(value = "title", defaultValue = "Life") String title,
+                                     @RequestParam(value = "apikey", defaultValue = "6b935860") String apikey,
+                                     @Value("${sbpg.init.SEARCH_URL}") String myurl) throws UnsupportedEncodingException {
+        System.out.println("Get film by title here: " + title);
+        List<Film> filmByTitle = filmsService.getFilmByTitle(title, apikey, myurl);
+        return ResponseEntity.ok(filmByTitle);
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public ResponseEntity<?> test(){
         return ResponseEntity.ok("Everything is ok");
     }
+
+    @RequestMapping(value = "/writeFilm", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> writeFilmId(@RequestParam(value = "id", defaultValue = "tt0372784") String id,
+                                       @RequestParam(value = "apikey", defaultValue = "6b935860") String apikey,
+                                       @Value("${sbpg.init.SEARCH_BY_IMDB_URL}") String myurl) throws IOException {
+        System.out.println("Get film by is here: " + id);
+        Film filmById = filmsService.getFilmById(id, apikey, myurl);
+        filmsService.writeFilmToDocByTemplate(filmById);
+        return ResponseEntity.ok(filmById);
+    }
+
 
 }
 

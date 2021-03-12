@@ -2,14 +2,18 @@ package ua.edu.sumdu.j2ee.pohorila.parse.model.converters;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 import ua.edu.sumdu.j2ee.pohorila.parse.model.entities.Film;
 import org.json.*;
+import ua.edu.sumdu.j2ee.pohorila.parse.model.services.ServicesInterface;
 
 @Component
 public class StringToFilmConverter implements Converter<String, Film>{
     private static final Logger logger = LogManager.getLogger();
+    @Autowired
+    private static ServicesInterface services;
 
     @Override
     public Film convert(String source) {
@@ -26,7 +30,7 @@ public class StringToFilmConverter implements Converter<String, Film>{
             } catch (JSONException e) {
                 logger.error("Error message", e);
             }
-            return film;
+        return film;
        }
 
 }
