@@ -70,6 +70,21 @@
         <artifactId>spring-test</artifactId>
         <version>5.0.4.RELEASE</version>
     </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>1</version>
+        </dependency>
     </dependencies>
 <!--
     <build>
@@ -94,16 +109,34 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.1.5.RELEASE</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
 
-    <beans xmlns="http://www.springframework.org/schema/beans"
+   <beans xmlns="http://www.springframework.org/schema/beans"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
-
         <bean id="services" class="Services">
+        </bean>
+        <bean id="conversionService"
+              class="org.springframework.context.support.ConversionServiceFactoryBean">
+            <property name="converters">
+                <list merge="true">
+                    <bean id="StringToFilmConverter"
+                          class="ua.edu.sumdu.j2ee.pohorila.parse.model.converters.StringToFilmConverter"/>
+                    <bean id="StringToFilmListConverter"
+                          class="ua.edu.sumdu.j2ee.pohorila.parse.model.converters.StringToFilmListConverter"/>
+                </list>
+            </property>
         </bean>
     </beans>
 

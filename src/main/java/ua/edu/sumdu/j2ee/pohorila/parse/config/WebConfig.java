@@ -1,16 +1,17 @@
 package ua.edu.sumdu.j2ee.pohorila.parse.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import ua.edu.sumdu.j2ee.pohorila.parse.model.converters.StringToFilmConverter;
 import ua.edu.sumdu.j2ee.pohorila.parse.model.converters.StringToFilmListConverter;
 
 @Configuration
-@EnableWebMvc
 public class WebConfig extends WebMvcConfigurerAdapter {
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
@@ -25,4 +26,13 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         registry.addConverter(new StringToFilmConverter());
         registry.addConverter(new StringToFilmListConverter());
     }
+
+    @Bean
+    public ConversionService conversionService () {
+        DefaultConversionService service = new DefaultConversionService();
+        service.addConverter(new StringToFilmConverter());
+        service.addConverter(new StringToFilmListConverter());
+        return service;
+    }
+
 }
