@@ -23,7 +23,7 @@ public class Services implements  ServicesInterface{
     @Autowired
     private ConversionService conversionService;
     @Autowired
-    private static SendGetRequestInterface getRequestInterface = new SendGetRequest();
+    private SendGetRequestInterface getRequestInterface = new SendGetRequest();
 
     public Services() {
     }
